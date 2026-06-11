@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NySoa BTP — Guide de prise en main</title>
+<style>
+  :root {
+    --orange: #E8660A;
+    --orange-light: #F5853A;
+    --orange-pale: #FEF0E7;
+    --navy: #1A2340;
+    --navy-mid: #2D3A5C;
+    --navy-light: #3D4F7C;
+    --sand: #F8F5F0;
+    --white: #FFFFFF;
+    --gray: #6B7280;
+    --gray-light: #E5E7EB;
+    --green: #15803D;
+    --green-bg: #DCFCE7;
+    --red: #B91C1C;
+    --red-bg: #FEE2E2;
+    --yellow: #92400E;
+    --yellow-bg: #FEF3C7;
+    --font-display: 'Georgia', serif;
+    --font-body: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-body); background: var(--sand); color: var(--navy); }
+
+  /* HEADER */
+  .header {
+    background: var(--navy);
+    color: white;
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 32px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .header-logo {
+    width: 38px; height: 38px;
+    background: var(--orange);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 18px; color: white; flex-shrink: 0;
+  }
+  .header-title { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; }
+  .header-sub { font-size: 0.72rem; color: #94a3b8; letter-spacing: 0.1em; text-transform: uppercase; }
+  .header-nav {
+    margin-left: auto;
+    display: flex; gap: 6px; flex-wrap: wrap;
+  }
+  .nav-btn {
+    padding: 5px 14px; border-radius: 20px; border: none; cursor: pointer;
+    font-size: 0.78rem; font-weight: 600; transition: all 0.2s;
+    background: rgba(255,255,255,0.1); color: #cbd5e1;
+  }
+  .nav-btn:hover, .nav-btn.active { background: var(--orange); color: white; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, #2a3d6b 100%);
+    color: white;
+    padding: 48px 32px;
+    text-align: center;
+  }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    margin-bottom: 12px;
+    line-height: 1.25;
+  }
+  .hero h1 span { color: var(--orange-light); }
+  .hero p { font-size: 1rem; color: #94a3b8; max-width: 600px; margin: 0 auto 28px; }
+  .hero-roles {
+    display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+  }
+  .role-pill {
+    padding: 7px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 700;
+    cursor: pointer; transition: all 0.2s; border: 2px solid transparent;
+  }
+  .role-pill:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.3); }
+  .pill-admin    { background: #7C3AED; color: white; }
+  .pill-daf      { background: #0369A1; color: white; }
+  .pill-rh       { background: #0F766E; color: white; }
+  .pill-chef     { background: var(--orange); color: white; }
+  .pill-controleur { background: #B45309; color: white; }
+  .pill-tech     { background: #1D4ED8; color: white; }
+
+  /* LAYOUT */
+  .container { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+  .section { display: none; }
+  .section.visible { display: block; }
+
+  /* CARDS */
+  .card {
+    background: white; border-radius: 14px; padding: 24px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.07); margin-bottom: 20px;
+  }
+  .card-title {
+    font-size: 1.05rem; font-weight: 700; color: var(--navy);
+    margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
+  }
+  .card-title .icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+
+  /* SCENARIO */
+  .scenario-header {
+    display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px;
+    padding-bottom: 16px; border-bottom: 2px solid var(--gray-light);
+  }
+  .scenario-num {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: var(--orange); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 1.1rem; flex-shrink: 0;
+  }
+  .scenario-meta h3 { font-size: 1.05rem; color: var(--navy); margin-bottom: 4px; }
+  .scenario-meta p { font-size: 0.85rem; color: var(--gray); }
+
+  .steps { list-style: none; counter-reset: step; }
+  .steps li {
+    counter-increment: step;
+    display: flex; gap: 14px; padding: 12px 0;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 0.9rem; line-height: 1.5;
+  }
+  .steps li:last-child { border-bottom: none; }
+  .steps li::before {
+    content: counter(step);
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--navy); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.72rem; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+  }
+
+  .badge {
+    display: inline-block; padding: 2px 10px; border-radius: 20px;
+    font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .badge-ok   { background: var(--green-bg); color: var(--green); }
+  .badge-warn { background: var(--yellow-bg); color: var(--yellow); }
+  .badge-crit { background: var(--red-bg); color: var(--red); }
+  .badge-info { background: #EEF2FF; color: #3730A3; }
+  .badge-new  { background: #FDF4FF; color: #7C3AED; }
+
+  .cred-table {
+    width: 100%; border-collapse: collapse; font-size: 0.87rem; margin-top: 12px;
+  }
+  .cred-table th {
+    background: var(--navy); color: white; padding: 8px 12px;
+    text-align: left; font-size: 0.78rem; letter-spacing: 0.05em;
+  }
+  .cred-table td { padding: 9px 12px; border-bottom: 1px solid var(--gray-light); }
+  .cred-table tr:last-child td { border-bottom: none; }
+  .cred-table tr:hover td { background: var(--orange-pale); }
+  .cred-row { cursor: pointer; }
+  .mono { font-family: 'Courier New', monospace; font-size: 0.85em; }
+
+  .flow-diagram {
+    display: flex; align-items: center; gap: 0; flex-wrap: wrap;
+    margin: 16px 0; background: #f8fafc; border-radius: 10px; padding: 16px 20px;
+  }
+  .flow-node {
+    background: white; border: 2px solid var(--gray-light);
+    border-radius: 8px; padding: 8px 14px;
+    font-size: 0.8rem; font-weight: 600; color: var(--navy);
+    text-align: center; min-width: 100px;
+  }
+  .flow-node.start { border-color: var(--orange); background: var(--orange-pale); }
+  .flow-node.end   { border-color: var(--green); background: var(--green-bg); color: var(--green); }
+  .flow-node.wait  { border-color: #D97706; background: var(--yellow-bg); color: var(--yellow); }
+  .flow-arrow { padding: 0 8px; color: var(--gray); font-size: 1rem; }
+
+  .tip {
+    border-left: 4px solid var(--orange);
+    background: var(--orange-pale);
+    padding: 12px 16px; border-radius: 0 8px 8px 0;
+    font-size: 0.85rem; margin: 12px 0; color: #7c2d12;
+  }
+  .tip strong { display: block; margin-bottom: 4px; }
+  .warning-box {
+    border-left: 4px solid #D97706;
+    background: var(--yellow-bg);
+    padding: 12px 16px; border-radius: 0 8px 8px 0;
+    font-size: 0.85rem; margin: 12px 0; color: var(--yellow);
+  }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 720px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  .tab-bar {
+    display: flex; gap: 4px; margin-bottom: 20px; flex-wrap: wrap;
+  }
+  .tab {
+    padding: 8px 18px; border-radius: 8px 8px 0 0; border: none; cursor: pointer;
+    font-size: 0.85rem; font-weight: 600; transition: all 0.2s;
+    background: var(--gray-light); color: var(--gray);
+    border-bottom: 3px solid transparent;
+  }
+  .tab.active { background: white; color: var(--navy); border-bottom-color: var(--orange); }
+
+  .progress-bar {
+    background: var(--gray-light); border-radius: 6px; height: 8px; margin: 8px 0;
+  }
+  .progress-fill { height: 100%; border-radius: 6px; background: var(--orange); transition: width 0.4s; }
+
+  .checklist { list-style: none; }
+  .checklist li {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 8px 0; border-bottom: 1px solid #f1f5f9;
+    font-size: 0.88rem;
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .check-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+
+  .role-section { display: none; }
+  .role-section.active { display: block; }
+
+  .scenario-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 640px) { .scenario-grid { grid-template-columns: 1fr; } }
+
+  .scenario-card {
+    border: 2px solid var(--gray-light); border-radius: 12px; padding: 18px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .scenario-card:hover { border-color: var(--orange); background: var(--orange-pale); }
+  .scenario-card h4 { font-size: 0.92rem; margin-bottom: 6px; }
+  .scenario-card p { font-size: 0.8rem; color: var(--gray); }
+
+  .expanded-scenario { display: none; }
+  .expanded-scenario.open { display: block; }
+
+  /* Flux circuit */
+  .circuit-table {
+    width: 100%; border-collapse: collapse; font-size: 0.85rem;
+  }
+  .circuit-table th {
+    background: var(--navy-mid); color: white; padding: 10px 14px;
+    text-align: left; font-size: 0.78rem;
+  }
+  .circuit-table td { padding: 10px 14px; border-bottom: 1px solid var(--gray-light); vertical-align: top; }
+  .circuit-table tr:hover td { background: var(--orange-pale); }
+
+  .role-tag {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-size: 0.73rem; font-weight: 700;
+  }
+  .rt-admin    { background: #EDE9FE; color: #5B21B6; }
+  .rt-daf      { background: #E0F2FE; color: #0369A1; }
+  .rt-rh       { background: #CCFBF1; color: #0F766E; }
+  .rt-chef     { background: #FEF0E7; color: #C2410C; }
+  .rt-ctrl     { background: #FEF3C7; color: #92400E; }
+  .rt-tech     { background: #DBEAFE; color: #1D4ED8; }
+
+  .big-number { font-size: 2rem; font-weight: 900; color: var(--orange); }
+  .stat-row { display: flex; gap: 20px; flex-wrap: wrap; margin: 16px 0; }
+  .stat-box {
+    flex: 1; min-width: 120px; background: #f8fafc; border-radius: 10px;
+    padding: 16px; text-align: center; border: 1px solid var(--gray-light);
+  }
+  .stat-label { font-size: 0.75rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
+
+  .troubleshoot-row {
+    display: flex; gap: 16px; padding: 14px 0;
+    border-bottom: 1px solid var(--gray-light); font-size: 0.88rem;
+  }
+  .troubleshoot-row:last-child { border-bottom: none; }
+  .prob { color: var(--red); font-weight: 600; min-width: 220px; }
+  .sol  { color: #166534; }
+
+  .copy-btn {
+    font-size: 0.75rem; background: var(--navy); color: white;
+    border: none; padding: 2px 8px; border-radius: 4px; cursor: pointer; margin-left: 8px;
+    opacity: 0.7; transition: opacity 0.2s;
+  }
+  .copy-btn:hover { opacity: 1; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <div class="header-logo">N</div>
+    <div>
+      <div class="header-title">NySoa BTP</div>
+      <div class="header-sub">Guide de prise en main — ERP Chantier</div>
+    </div>
+    <nav class="header-nav">
+      <button class="nav-btn active" onclick="showSection('accueil')">Accueil</button>
+      <button class="nav-btn" onclick="showSection('connexion')">Connexion</button>
+      <button class="nav-btn" onclick="showSection('roles')">Rôles</button>
+      <button class="nav-btn" onclick="showSection('scenarios')">Scénarios</button>
+      <button class="nav-btn" onclick="showSection('circuit')">Circuit</button>
+      <button class="nav-btn" onclick="showSection('depannage')">Dépannage</button>
+    </nav>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>Bienvenue sur <span>NySoa BTP</span></h1>
+  <p>ERP de gestion de chantier — 6 rôles, un seul système. Choisissez votre profil pour commencer.</p>
+  <div class="hero-roles">
+    <button class="role-pill pill-admin" onclick="goToRole('admin')">👤 Administrateur</button>
+    <button class="role-pill pill-daf" onclick="goToRole('daf')">💰 DAF</button>
+    <button class="role-pill pill-rh" onclick="goToRole('rh')">👥 RH</button>
+    <button class="role-pill pill-chef" onclick="goToRole('chef')">🏗️ Chef chantier</button>
+    <button class="role-pill pill-controleur" onclick="goToRole('controleur')">🔍 Contrôleur</button>
+    <button class="role-pill pill-tech" onclick="goToRole('tech')">🔧 Technicien</button>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ══════════════════════════════════════════════
+     SECTION ACCUEIL
+══════════════════════════════════════════════ -->
+<div id="s-accueil" class="section visible">
+
+  <div class="stat-row">
+    <div class="stat-box"><div class="big-number">6</div><div class="stat-label">Rôles métier</div></div>
+    <div class="stat-box"><div class="big-number">8</div><div class="stat-label">Phases parcours</div></div>
+    <div class="stat-box"><div class="big-number">9</div><div class="stat-label">Types de demandes</div></div>
+    <div class="stat-box"><div class="big-number">PWA</div><div class="stat-label">Mode hors-ligne</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <div class="icon" style="background:#FEF0E7">🗺️</div>
+      Parcours utilisateur en 8 phases
+    </div>
+    <div class="flow-diagram" style="flex-direction:column; align-items:stretch; gap:10px;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div class="flow-node start" style="flex:1">1. Authentification<br><small>login.html → redirection par rôle</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node" style="flex:1">2. Création chantier<br><small>Admin crée / DAF fait devis</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node" style="flex:1">3. Gestion RH<br><small>Employés + comptes chefs</small></div>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div class="flow-node" style="flex:1">4. Opérations quotidiennes<br><small>Pointage, matériaux, rapports</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node" style="flex:1">5. Finances & compta<br><small>Journal, caisse, budget Felana</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node" style="flex:1">6. Calcul salaires<br><small>Pointages → fiche de paie</small></div>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div class="flow-node" style="flex:1">7. Suivi & contrôle<br><small>Inspections, Gantt, rapports</small></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node end" style="flex:2">8. Administration<br><small>Import Excel, sauvegarde, gestion utilisateurs</small></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><div class="icon" style="background:#EDE9FE">⚡</div>Démarrage rapide</div>
+      <ul class="checklist">
+        <li><span class="check-icon">1️⃣</span>Ouvrir <strong>login.html</strong></li>
+        <li><span class="check-icon">2️⃣</span>Choisir un compte de test (voir section Connexion)</li>
+        <li><span class="check-icon">3️⃣</span>Explorer le tableau de bord selon votre rôle</li>
+        <li><span class="check-icon">4️⃣</span>Tester un scénario complet (voir section Scénarios)</li>
+        <li><span class="check-icon">5️⃣</span>Valider les demandes depuis le compte Admin</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="icon" style="background:#DCFCE7">🏗️</div>Stack technique</div>
+      <ul class="checklist">
+        <li><span class="check-icon">🌐</span>Frontend : HTML + Vanilla JS — déployé sur <strong>GitHub Pages</strong></li>
+        <li><span class="check-icon">🗄️</span>Backend : <strong>Supabase</strong> (Auth + PostgreSQL + RLS)</li>
+        <li><span class="check-icon">📱</span><strong>PWA</strong> — installable sur mobile, fonctionne hors-ligne</li>
+        <li><span class="check-icon">🔒</span>RLS — chaque rôle ne voit que ses données autorisées</li>
+        <li><span class="check-icon">⚙️</span>Config : <code class="mono">config.js</code> (URL + clé Supabase)</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SECTION CONNEXION
+══════════════════════════════════════════════ -->
+<div id="s-connexion" class="section">
+
+  <div class="card">
+    <div class="card-title"><div class="icon" style="background:#FEF0E7">🔑</div>Comptes de démonstration</div>
+    <p style="font-size:0.85rem;color:var(--gray);margin-bottom:12px">Cliquer sur une ligne pour copier l'email dans le presse-papier.</p>
+    <table class="cred-table">
+      <thead><tr><th>Rôle</th><th>Email</th><th>Mot de passe</th><th>Page cible</th></tr></thead>
+      <tbody>
+        <tr class="cred-row" onclick="copyEmail('admin@nysoa.mg')">
+          <td><span class="role-tag rt-admin">Admin</span></td>
+          <td class="mono">admin@nysoa.mg</td><td class="mono">admin123</td><td>admin.html</td>
+        </tr>
+        <tr class="cred-row" onclick="copyEmail('daf@nysoa.mg')">
+          <td><span class="role-tag rt-daf">DAF</span></td>
+          <td class="mono">daf@nysoa.mg</td><td class="mono">daf123</td><td>daf.html</td>
+        </tr>
+        <tr class="cred-row" onclick="copyEmail('rh@nysoa.mg')">
+          <td><span class="role-tag rt-rh">RH</span></td>
+          <td class="mono">rh@nysoa.mg</td><td class="mono">rh123</td><td>rh.html</td>
+        </tr>
+        <tr class="cred-row" onclick="copyEmail('chef@nysoa.mg')">
+          <td><span class="role-tag rt-chef">Chef</span></td>
+          <td class="mono">chef@nysoa.mg</td><td class="mono">chef123</td><td>chef-chantier.html</td>
+        </tr>
+        <tr class="cred-row" onclick="copyEmail('controleur@nysoa.mg')">
+          <td><span class="role-tag rt-ctrl">Contrôleur</span></td>
+          <td class="mono">controleur@nysoa.mg</td><td class="mono">controleur123</td><td>controleur.html</td>
+        </tr>
+        <tr class="cred-row" onclick="copyEmail('technicien@nysoa.mg')">
+          <td><span class="role-tag rt-tech">Technicien</span></td>
+          <td class="mono">technicien@nysoa.mg</td><td class="mono">tech123</td><td>technicien.html</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><div class="icon" style="background:#DCFCE7">✅</div>Procédure de connexion</div>
+      <ol class="steps">
+        <li>Ouvrir <strong>login.html</strong></li>
+        <li>Saisir l'email et le mot de passe (ou cliquer sur l'email dans la liste)</li>
+        <li>Cliquer <strong>Se connecter</strong></li>
+        <li>Redirection automatique vers la page du rôle</li>
+        <li>Le JWT contient le rôle — les filtres RLS s'appliquent automatiquement</li>
+      </ol>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="icon" style="background:#FEE2E2">⚠️</div>Points d'attention connexion</div>
+      <div class="warning-box">
+        <strong>Scope Chef de chantier</strong>
+        Le Chef ne voit QUE les données de son chantier. Si les données n'apparaissent pas, vérifier que <code class="mono">user_metadata.chantier</code> correspond exactement au nom dans la table <code class="mono">chantiers</code>.
+      </div>
+      <div class="tip">
+        <strong>Déconnexion</strong>
+        Toujours utiliser le bouton <strong>Déconnexion</strong> (coin haut-droite) plutôt que de fermer l'onglet, pour invalider le token Supabase.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SECTION RÔLES
+══════════════════════════════════════════════ -->
+<div id="s-roles" class="section">
+
+  <div class="tab-bar">
+    <button class="tab active" onclick="showRole('admin')">👤 Admin</button>
+    <button class="tab" onclick="showRole('daf')">💰 DAF</button>
+    <button class="tab" onclick="showRole('rh')">👥 RH</button>
+    <button class="tab" onclick="showRole('chef')">🏗️ Chef</button>
+    <button class="tab" onclick="showRole('controleur')">🔍 Contrôleur</button>
+    <button class="tab" onclick="showRole('tech')">🔧 Technicien</button>
+  </div>
+
+  <!-- ADMIN -->
+  <div id="role-admin" class="role-section active">
+    <div class="card">
+      <div class="scenario-header">
+        <div class="scenario-num" style="background:#7C3AED">👤</div>
+        <div class="scenario-meta">
+          <h3>Administrateur — admin.html</h3>
+          <p>Accès total au système. Validation centralisée, gestion utilisateurs, KPI globaux.</p>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div>
+          <strong style="font-size:0.85rem">Sections du dashboard :</strong>
+          <ul class="checklist" style="margin-top:10px">
+            <li><span class="check-icon">📥</span><strong>Import Excel</strong> — charger des données en masse (.xlsx)</li>
+            <li><span class="check-icon">💾</span><strong>Sauvegarde</strong> — exporter toutes les données</li>
+            <li><span class="check-icon">👥</span><strong>Utilisateurs</strong> — créer / gérer comptes</li>
+            <li><span class="check-icon">📋</span><strong>Rapports chantier</strong> — vue globale</li>
+            <li><span class="check-icon">🔍</span><strong>Contrôles</strong> — inspections inopinées</li>
+            <li><span class="check-icon">✅</span><strong>Validations</strong> — approuver/rejeter les demandes</li>
+            <li><span class="check-icon">📊</span><strong>Gantt</strong> — avancement global</li>
+            <li><span class="check-icon">📡</span><strong>Supabase</strong> — état de la connexion</li>
+          </ul>
+        </div>
+        <div>
+          <strong style="font-size:0.85rem">Créer un nouveau Chef de chantier :</strong>
+          <ol class="steps" style="margin-top:10px">
+            <li>Aller dans <strong>Utilisateurs</strong></li>
+            <li>Rôle : sélectionner <strong>chef</strong></li>
+            <li>Renseigner email + mot de passe</li>
+            <li>Renseigner <strong>Chantier</strong> (correspondance exacte avec la DB)</li>
+            <li>Cliquer <strong>Créer l'utilisateur</strong></li>
+          </ol>
+          <div class="tip" style="margin-top:12px">
+            <strong>KPI Bénéfice net</strong>
+            Affiché en vert (positif) ou rouge (négatif) sur le dashboard. Calculé dynamiquement : Recettes − Dépenses.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAF -->
+  <div id="role-daf" class="role-section">
+    <div class="card">
+      <div class="scenario-header">
+        <div class="scenario-num" style="background:#0369A1">💰</div>
+        <div class="scenario-meta">
+          <h3>DAF — Direction Administrative et Financière — daf.html</h3>
+          <p>Comptabilité, budgets, devis/proforma, factures, rapports financiers.</p>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div>
+          <strong style="font-size:0.85rem">Modules principaux :</strong>
+          <ul class="checklist" style="margin-top:10px">
+            <li><span class="check-icon">📒</span><strong>Comptabilité</strong> — journal, nouvelles écritures, filtres</li>
+            <li><span class="check-icon">💹</span><strong>Budget global</strong> — gestion budgétaire</li>
+            <li><span class="check-icon">🌿</span><strong>Budget FELANA</strong> — lignes budgétaires dédiées, comparatif réel/prévu</li>
+            <li><span class="check-icon">📄</span><strong>Devis & Proforma</strong> — création, cycle de vie, export PDF</li>
+            <li><span class="check-icon">🧾</span><strong>Factures</strong> — tableau + nouvelle facture</li>
+            <li><span class="check-icon">📈</span><strong>Rapports</strong> — export PDF/Excel</li>
+          </ul>
+        </div>
+        <div>
+          <strong style="font-size:0.85rem">Cycle de vie d'un devis :</strong>
+          <div class="flow-diagram" style="flex-direction:column; gap:8px; margin-top:10px; padding:12px">
+            <div class="flow-node start">BROUILLON</div>
+            <div style="text-align:center;color:var(--gray);font-size:0.8rem">↓ Soumettre</div>
+            <div class="flow-node wait">SOUMIS → validation Admin</div>
+            <div style="text-align:center;color:var(--gray);font-size:0.8rem">↓ Approuver</div>
+            <div class="flow-node">APPROUVÉ → ENVOYÉ</div>
+            <div style="text-align:center;color:var(--gray);font-size:0.8rem">↓</div>
+            <div class="flow-node end">ACCEPTÉ → Conversion Chantier</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RH -->
+  <div id="role-rh" class="role-section">
+    <div class="card">
+      <div class="scenario-header">
+        <div class="scenario-num" style="background:#0F766E">👥</div>
+        <div class="scenario-meta">
+          <h3>RH — Ressources Humaines — rh.html</h3>
+          <p>Employés, paie, congés, formations, recrutement, comptes chefs.</p>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div>
+          <strong style="font-size:0.85rem">Modules :</strong>
+          <ul class="checklist" style="margin-top:10px">
+            <li><span class="check-icon">👤</span><strong>Employés</strong> — 82 actifs, filtres département/chantier</li>
+            <li><span class="check-icon">🎯</span><strong>Recrutement</strong> — demandes + suivi</li>
+            <li><span class="check-icon">🏖️</span><strong>Congés</strong> — demandes, dates, motifs</li>
+            <li><span class="check-icon">📚</span><strong>Formations</strong> — plan + suivi</li>
+            <li><span class="check-icon">💳</span><strong>Paie</strong> — génération fiches, export PDF, réajustement</li>
+            <li><span class="check-icon">🔑</span><strong>Comptes chefs</strong> — création avec chantier_id obligatoire</li>
+          </ul>
+        </div>
+        <div>
+          <strong style="font-size:0.85rem">Générer les fiches de paie :</strong>
+          <ol class="steps" style="margin-top:10px">
+            <li>Section <strong>Paie</strong> → cliquer <strong>Générer fiches</strong></li>
+            <li>Les pointages sont agrégés automatiquement</li>
+            <li>Tableau : employé, jours, taux, brut, avances, net</li>
+            <li>Cliquer <strong>Fiche de paie</strong> pour voir le détail (revenus/déductions CNaPS/OSTIE)</li>
+            <li>Export individuel PDF ou export global</li>
+            <li>Option <strong>Réajuster salaires</strong> : modal d'indexation</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHEF -->
+  <div id="role-chef" class="role-section">
+    <div class="card">
+      <div class="scenario-header">
+        <div class="scenario-num" style="background:var(--orange)">🏗️</div>
+        <div class="scenario-meta">
+          <h3>Chef de chantier — chef-chantier.html</h3>
+          <p>Scopé à UN seul chantier. Pointage, équipe, matériaux, planning, rapports.</p>
+        </div>
+      </div>
+      <div class="warning-box">
+        <strong>⚠️ Isolation par RLS</strong> Le Chef ne voit QUE les données de son chantier (filtrage automatique via <code class="mono">user_metadata.chantier</code>). Aucune donnée des autres chantiers n'est accessible.
+      </div>
+      <div class="grid-2">
+        <div>
+          <strong style="font-size:0.85rem">Modules :</strong>
+          <ul class="checklist" style="margin-top:10px">
+            <li><span class="check-icon">🏢</span><strong>Mes Chantiers</strong> — statut, budget, avancement</li>
+            <li><span class="check-icon">👷</span><strong>Mon Équipe</strong> — ouvriers affectés</li>
+            <li><span class="check-icon">✍️</span><strong>Pointage</strong> — manuel ou QR code</li>
+            <li><span class="check-icon">📅</span><strong>Planning</strong> — tâches, priorités</li>
+            <li><span class="check-icon">🧱</span><strong>Matériaux</strong> — stocks + demandes</li>
+            <li><span class="check-icon">📋</span><strong>Rapports</strong> — rapports journaliers</li>
+          </ul>
+        </div>
+        <div>
+          <strong style="font-size:0.85rem">Pointage manuel :</strong>
+          <ol class="steps" style="margin-top:10px">
+            <li>Section <strong>Pointage</strong></li>
+            <li>Sélectionner l'employé dans la liste déroulante</li>
+            <li>Choisir la date</li>
+            <li>Sélectionner le statut : Présent / Absent / Congé…</li>
+            <li>Cliquer <strong>Enregistrer</strong></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTRÔLEUR -->
+  <div id="role-controleur" class="role-section">
+    <div class="card">
+      <div class="scenario-header">
+        <div class="scenario-num" style="background:#B45309">🔍</div>
+        <div class="scenario-meta">
+          <h3>Contrôleur — controleur.html</h3>
+          <p>Inspections qualité/sécurité sur tous les chantiers. Accès multi-chantiers.</p>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div>
+          <strong style="font-size:0.85rem">Modules :</strong>
+          <ul class="checklist" style="margin-top:10px">
+            <li><span class="check-icon">📋</span><strong>Inspections</strong> — toutes les inspections, toutes les chantiers</li>
+            <li><span class="check-icon">🏆</span><strong>Qualité</strong> — checklist 7 critères</li>
+            <li><span class="check-icon">⛑️</span><strong>Sécurité</strong> — checklist 7 vérifications</li>
+            <li><span class="check-icon">📊</span><strong>Rapports</strong> — export inspections</li>
+          </ul>
+          <div class="tip" style="margin-top:12px">
+            <strong>Statut automatique</strong>
+            Si un critère qualité ou sécurité est décoché, le statut passe automatiquement à <strong>Non conforme</strong>.
+          </div>
+        </div>
+        <div>
+          <strong style="font-size:0.85rem">Créer une inspection :</strong>
+          <ol class="steps" style="margin-top:10px">
+            <li>Section <strong>Inspections</strong> → <strong>Nouvelle Inspection</strong></li>
+            <li>Sélectionner le chantier dans la liste</li>
+            <li>Remplir la checklist qualité (7 éléments)</li>
+            <li>Remplir la checklist sécurité (7 éléments)</li>
+            <li>Ajouter les observations</li>
+            <li>Enregistrer — statut calculé automatiquement</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TECHNICIEN -->
+  <div id="role-tech" class="role-section">
+    <div class="card">
+      <div class="scenario-header">
+        <div class="scenario-num" style="background:#1D4ED8">🔧</div>
+        <div class="scenario-meta">
+          <h3>Technicien — technicien.html</h3>
+          <p>Projets, tâches et interventions techniques. Rapports terrain.</p>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div>
+          <strong style="font-size:0.85rem">Modules :</strong>
+          <ul class="checklist" style="margin-top:10px">
+            <li><span class="check-icon">📁</span><strong>Mes Projets</strong> — projets techniques assignés</li>
+            <li><span class="check-icon">✅</span><strong>Tâches</strong> — description, priorité, échéance</li>
+            <li><span class="check-icon">🔧</span><strong>Interventions</strong> — type, lieu, durée</li>
+            <li><span class="check-icon">📄</span><strong>Rapports</strong> — rapports techniques soumis à validation Admin</li>
+          </ul>
+        </div>
+        <div>
+          <strong style="font-size:0.85rem">Créer une intervention :</strong>
+          <ol class="steps" style="margin-top:10px">
+            <li>Section <strong>Interventions</strong></li>
+            <li>Cliquer <strong>Nouvelle intervention</strong></li>
+            <li>Renseigner : type, lieu, description, durée</li>
+            <li>Enregistrer — soumis à validation Admin</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SECTION SCÉNARIOS
+══════════════════════════════════════════════ -->
+<div id="s-scenarios" class="section">
+
+  <div class="card">
+    <div class="card-title"><div class="icon" style="background:#FEF0E7">🎬</div>Scénarios complets — flux de bout en bout</div>
+    <p style="font-size:0.85rem;color:var(--gray);margin-bottom:16px">Cliquez sur un scénario pour voir les étapes détaillées.</p>
+
+    <div class="scenario-grid">
+      <div class="scenario-card" onclick="toggleScenario('sc1')">
+        <h4>🏗️ S1 — Création d'un nouveau chantier</h4>
+        <p>De la création Admin au démarrage terrain avec chef affecté</p>
+      </div>
+      <div class="scenario-card" onclick="toggleScenario('sc2')">
+        <h4>📄 S2 — Devis → Chantier (DAF)</h4>
+        <p>Créer un devis proforma, l'approuver, convertir en chantier</p>
+      </div>
+      <div class="scenario-card" onclick="toggleScenario('sc3')">
+        <h4>👷 S3 — Onboarding d'un nouvel employé</h4>
+        <p>RH crée l'employé, Admin valide, Chef le voit sur son chantier</p>
+      </div>
+      <div class="scenario-card" onclick="toggleScenario('sc4')">
+        <h4>✍️ S4 — Pointage quotidien</h4>
+        <p>Le Chef enregistre les présences, le RH génère les fiches de paie</p>
+      </div>
+      <div class="scenario-card" onclick="toggleScenario('sc5')">
+        <h4>🧱 S5 — Demande de matériaux</h4>
+        <p>Chef fait une demande → Admin valide → stock mis à jour</p>
+      </div>
+      <div class="scenario-card" onclick="toggleScenario('sc6')">
+        <h4>🔍 S6 — Inspection qualité/sécurité</h4>
+        <p>Contrôleur effectue une inspection inopinée et rédige son rapport</p>
+      </div>
+      <div class="scenario-card" onclick="toggleScenario('sc7')">
+        <h4>💰 S7 — Cycle comptable mensuel</h4>
+        <p>DAF saisit les écritures, consulte le budget Felana, exporte les rapports</p>
+      </div>
+      <div class="scenario-card" onclick="toggleScenario('sc8')">
+        <h4>💳 S8 — Calcul et export des salaires</h4>
+        <p>Du pointage mensuel à la fiche de paie exportée en PDF</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Détails scénarios -->
+
+  <div id="sc1" class="expanded-scenario">
+    <div class="card">
+      <div class="scenario-header">
+        <div class="scenario-num">S1</div>
+        <div class="scenario-meta">
+          <h3>Création d'un nouveau chantier</h3>
+          <p>Durée estimée : 10 min | Rôles impliqués : <span class="role-tag rt-admin">Admin</span> <span class="role-tag rt-daf">DAF</span> <span class="role-tag rt-rh">RH</span> <span class="role-tag rt-chef">Chef</span></p>
+        </div>
+      </div>
+      <div class="flow-diagram">
+        <div class="flow-node start">Admin crée</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">DAF budget</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">RH crée chef</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node wait">Admin valide</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node end">Chef opérationnel</div>
+      </div>
+      <ol class="steps">
+        <li><strong>[Admin]</strong> Se connecter sur <code class="mono">admin.html</code> → section <strong>Utilisateurs</strong></li>
+        <li><strong>[Admin]</strong> Créer un chantier : aller dans la base Supabase ou via l'import Excel — renseigner nom, client, budget, dates</li>
+        <li><strong>[DAF]</strong> Se connecter sur <code class="mono">daf.html</code> → section <strong>Budget</strong> — Associer une ligne budgétaire au chantier</li>
+        <li><strong>[RH]</strong> Se connecter sur <code class="mono">rh.html</code> → section <strong>Comptes chefs</strong> — Créer le compte chef avec le nom exact du chantier</li>
+        <li><strong>[Admin]</strong> Section <strong>Validations</strong> — Approuver la demande de création du chef <span class="badge badge-warn">EN ATTENTE</span></li>
+        <li><strong>[Chef]</strong> Se connecter sur <code class="mono">login.html</code> avec les identifiants reçus — vérifier la redirection vers <code class="mono">chef-chantier.html</code></li>
+        <li><strong>[Chef]</strong> Dashboard → vérifier que seul le bon chantier apparaît dans <strong>Mes Chantiers</strong></li>
+      </ol>
+      <div class="tip"><strong>Vérification clé</strong> Le Chef ne doit voir AUCUNE donnée des autres chantiers. Si c'est le cas, vérifier le champ <code class="mono">chantier</code> dans <code class="mono">user_metadata</code>.</div>
+    </div>
+  </div>
+
+  <div id="sc2" class="expanded-scenario">
+    <div class="card">
+      <div class="scenario-header">
+        <div class="scenario-num">S2</div>
+        <div class="scenario-meta">
+          <h3>Devis Proforma → Conversion en Chantier</h3>
+          <p>Durée estimée : 8 min | Rôles : <span class="role-tag rt-daf">DAF</span> <span class="role-tag rt-admin">Admin</span></p>
+        </div>
+      </div>
+      <div class="flow-diagram">
+        <div class="flow-node start">Créer devis</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">Soumettre</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node wait">Validation Admin</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">Client accepte</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node end">Chantier créé</div>
+      </div>
+      <ol class="steps">
+        <li><strong>[DAF]</strong> Section <strong>Devis & Proforma</strong> → <strong>Nouveau devis</strong></li>
+        <li><strong>[DAF]</strong> Renseigner : client, objet des travaux, lots (désignation, quantité, PU), TVA → TTC calculé automatiquement</li>
+        <li><strong>[DAF]</strong> Enregistrer en <span class="badge badge-info">BROUILLON</span> → vérifier les montants</li>
+        <li><strong>[DAF]</strong> Cliquer <strong>Soumettre</strong> → statut passe à <span class="badge badge-warn">SOUMIS</span></li>
+        <li><strong>[Admin]</strong> Section <strong>Validations</strong> → trouver la demande de type "Devis" → <strong>Approuver</strong></li>
+        <li><strong>[DAF]</strong> Statut passe à <span class="badge badge-ok">APPROUVÉ</span> → envoyer au client → statut <span class="badge badge-info">ENVOYÉ</span></li>
+        <li><strong>[DAF]</strong> Enregistrer la réponse client : <strong>Accepter</strong> → statut <span class="badge badge-ok">ACCEPTÉ</span></li>
+        <li><strong>[DAF]</strong> Cliquer <strong>Convertir en Chantier</strong> → formulaire pré-rempli (objet → nom, client, budget TTC)</li>
+        <li><strong>[Admin]</strong> Valider la conversion → le chantier est créé avec <code class="mono">devis_id</code> traçable</li>
+      </ol>
+    </div>
+  </div>
+
+  <div id="sc3" class="expanded-scenario">
+    <div class="card">
+      <div class="scenario-header">
+        <div class="scenario-num">S3</div>
+        <div class="scenario-meta">
+          <h3>Onboarding d'un nouvel employé</h3>
+          <p>Durée estimée : 5 min | Rôles : <span class="role-tag rt-rh">RH</span> <span class="role-tag rt-admin">Admin</span> <span class="role-tag rt-chef">Chef</span></p>
+        </div>
+      </div>
+      <ol class="steps">
+        <li><strong>[RH]</strong> Section <strong>Employés</strong> → <strong>Nouvel employé</strong></li>
+        <li><strong>[RH]</strong> Renseigner : nom, prénom, poste, département, chantier, date embauche, salaire, <strong>type_salaire</strong> (Mensuel ou Journalier)</li>
+        <li><strong>[RH]</strong> Enregistrer — la demande est soumise à validation</li>
+        <li><strong>[Admin]</strong> Section <strong>Validations</strong> → approuver la création de l'employé</li>
+        <li><strong>[Chef du chantier concerné]</strong> Section <strong>Mon Équipe</strong> → l'employé apparaît dans sa liste</li>
+        <li><strong>[Chef]</strong> Tester le pointage : section <strong>Pointage</strong> → sélectionner le nouvel employé → enregistrer une présence</li>
+      </ol>
+      <div class="tip"><strong>Type de salaire</strong> Bien sélectionner Mensuel ou Journalier — ce champ détermine le calcul de la paie. Ne pas laisser le système deviner.</div>
+    </div>
+  </div>
+
+  <div id="sc4" class="expanded-scenario">
+    <div class="card">
+      <div class="scenario-header">
+        <div class="scenario-num">S4</div>
+        <div class="scenario-meta">
+          <h3>Pointage quotidien et calcul de paie</h3>
+          <p>Durée estimée : 6 min | Rôles : <span class="role-tag rt-chef">Chef</span> <span class="role-tag rt-rh">RH</span></p>
+        </div>
+      </div>
+      <ol class="steps">
+        <li><strong>[Chef]</strong> Section <strong>Pointage</strong> chaque matin</li>
+        <li><strong>[Chef]</strong> Pour chaque ouvrier : sélectionner dans la liste → statut (Présent / Absent / Congé / …) → <strong>Enregistrer</strong></li>
+        <li>Répéter chaque jour ouvré du mois — les données s'accumulent dans <code class="mono">pointage_attendance</code></li>
+        <li><strong>[RH]</strong> Fin de mois → section <strong>Paie</strong> → <strong>Générer fiches</strong></li>
+        <li><strong>[RH]</strong> Tableau apparaît : employé, jours présents, taux journalier, brut, déductions CNaPS/OSTIE, net</li>
+        <li><strong>[RH]</strong> Cliquer <strong>Fiche de paie</strong> sur chaque ligne pour voir le détail complet</li>
+        <li><strong>[RH]</strong> Exporter : <strong>Export global</strong> (toutes les fiches) ou <strong>Export chantier</strong> (filtré)</li>
+      </ol>
+    </div>
+  </div>
+
+  <div id="sc5" class="expanded-scenario">
+    <div class="card">
+      <div class="scenario-header">
+        <div class="scenario-num">S5</div>
+        <div class="scenario-meta">
+          <h3>Demande de matériaux sur chantier</h3>
+          <p>Durée estimée : 5 min | Rôles : <span class="role-tag rt-chef">Chef</span> <span class="role-tag rt-admin">Admin</span></p>
+        </div>
+      </div>
+      <ol class="steps">
+        <li><strong>[Chef]</strong> Section <strong>Matériaux</strong> — consulter l'état du stock actuel</li>
+        <li><strong>[Chef]</strong> Si stock insuffisant → <strong>Demande de matériaux</strong></li>
+        <li><strong>[Chef]</strong> Renseigner : matériau, quantité, motif de la demande</li>
+        <li><strong>[Chef]</strong> Soumettre → demande en <span class="badge badge-warn">EN ATTENTE</span> de validation</li>
+        <li><strong>[Admin]</strong> Section <strong>Validations</strong> → trouver la demande matériaux → Approuver ou Rejeter avec motif</li>
+        <li><strong>[Chef]</strong> Après approbation → le stock du chantier est mis à jour automatiquement</li>
+      </ol>
+      <div class="warning-box"><strong>Rejet</strong> Si l'Admin rejette, il doit obligatoirement renseigner un motif. Le Chef verra le motif dans ses demandes.</div>
+    </div>
+  </div>
+
+  <div id="sc6" class="expanded-scenario">
+    <div class="card">
+      <div class="scenario-header">
+        <div class="scenario-num">S6</div>
+        <div class="scenario-meta">
+          <h3>Inspection qualité/sécurité inopinée</h3>
+          <p>Durée estimée : 7 min | Rôles : <span class="role-tag rt-ctrl">Contrôleur</span> <span class="role-tag rt-admin">Admin</span></p>
+        </div>
+      </div>
+      <ol class="steps">
+        <li><strong>[Contrôleur]</strong> Section <strong>Inspections</strong> → <strong>Nouvelle Inspection</strong></li>
+        <li><strong>[Contrôleur]</strong> Sélectionner le chantier dans la liste déroulante</li>
+        <li><strong>[Contrôleur]</strong> Remplir la checklist <strong>Qualité</strong> (7 critères) :<br>Cocher les éléments conformes, laisser vide les non-conformes</li>
+        <li><strong>[Contrôleur]</strong> Remplir la checklist <strong>Sécurité</strong> (7 vérifications)</li>
+        <li><strong>[Contrôleur]</strong> Ajouter des <strong>observations</strong> textuelles</li>
+        <li>Le statut est calculé automatiquement : <span class="badge badge-ok">Conforme</span> ou <span class="badge badge-crit">Non conforme</span></li>
+        <li><strong>[Contrôleur]</strong> Enregistrer → le rapport est soumis à l'Admin</li>
+        <li><strong>[Admin]</strong> Section <strong>Contrôles</strong> → voir l'inspection, historique, statistiques</li>
+      </ol>
+    </div>
+  </div>
+
+  <div id="sc7" class="expanded-scenario">
+    <div class="card">
+      <div class="scenario-header">
+        <div class="scenario-num">S7</div>
+        <div class="scenario-meta">
+          <h3>Cycle comptable mensuel</h3>
+          <p>Durée estimée : 10 min | Rôles : <span class="role-tag rt-daf">DAF</span> <span class="role-tag rt-admin">Admin</span></p>
+        </div>
+      </div>
+      <ol class="steps">
+        <li><strong>[DAF]</strong> Section <strong>Comptabilité</strong> → consulter le journal (200+ lignes existantes)</li>
+        <li><strong>[DAF]</strong> <strong>Nouvelle écriture</strong> → renseigner : date, libellé, débit/crédit, catégorie, chantier</li>
+        <li><strong>[DAF]</strong> Appliquer les filtres pour vérifier les recettes / dépenses du mois</li>
+        <li><strong>[DAF]</strong> Section <strong>Budget FELANA</strong> → consulter le tableau postes × mois (prévu vs réel)</li>
+        <li><strong>[DAF]</strong> Vérifier les alertes de dépassement (seuil configurable)</li>
+        <li><strong>[DAF]</strong> Section <strong>Rapports financiers</strong> → exporter en PDF ou Excel</li>
+        <li><strong>[Admin]</strong> Dashboard → KPI Bénéfice net (Recettes − Dépenses) en vert ou rouge</li>
+      </ol>
+    </div>
+  </div>
+
+  <div id="sc8" class="expanded-scenario">
+    <div class="card">
+      <div class="scenario-header">
+        <div class="scenario-num">S8</div>
+        <div class="scenario-meta">
+          <h3>Calcul et export des salaires</h3>
+          <p>Durée estimée : 8 min | Rôles : <span class="role-tag rt-chef">Chef</span> <span class="role-tag rt-rh">RH</span></p>
+        </div>
+      </div>
+      <ol class="steps">
+        <li>Prérequis : pointages du mois enregistrés par le Chef dans <code class="mono">pointage_attendance</code></li>
+        <li><strong>[RH]</strong> Section <strong>Paie</strong> → <strong>Générer fiches</strong></li>
+        <li>Calcul : brut = jours_présents × salaire_journalier (ou salaire mensuel si type Mensuel)</li>
+        <li>Déductions automatiques : CNaPS + OSTIE calculés selon barème</li>
+        <li>Colonne <strong>Net</strong> = brut − déductions − avances</li>
+        <li><strong>[RH]</strong> Cliquer <strong>Fiche de paie</strong> → visualiser le détail complet</li>
+        <li><strong>[RH]</strong> <strong>Export global</strong> → télécharger toutes les fiches en un fichier</li>
+        <li><strong>[RH]</strong> Pour ajuster les salaires : <strong>Réajuster salaires</strong> → modal d'indexation (en %)</li>
+        <li><strong>[RH]</strong> <strong>Export chantier</strong> → filtrer par chantier pour transmission aux chefs</li>
+      </ol>
+      <div class="tip"><strong>QR Code</strong> Pour les salaires payés en espèces, le QR Code encode {id, nom} uniquement — jamais le montant, pour raisons de sécurité.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SECTION CIRCUIT DE VALIDATION
+══════════════════════════════════════════════ -->
+<div id="s-circuit" class="section">
+
+  <div class="card">
+    <div class="card-title"><div class="icon" style="background:#EDE9FE">⚙️</div>Circuit de validation centralisé</div>
+    <p style="font-size:0.85rem;color:var(--gray);margin-bottom:16px">Toutes les demandes transitent par la table <code class="mono">validations</code> et sont approuvées ou rejetées par l'Admin.</p>
+
+    <div class="flow-diagram" style="justify-content:center; gap:16px;">
+      <div class="flow-node start">Émetteur soumet</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node wait" style="font-weight:700">EN_ATTENTE</div>
+      <div class="flow-arrow">→</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="flow-node end">✅ APPROUVÉ<br><small>(commentaire opt.)</small></div>
+        <div class="flow-node" style="border-color:var(--red);background:var(--red-bg);color:var(--red)">❌ REJETÉ<br><small>(motif obligatoire)</small></div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">ARCHIVÉ</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="icon" style="background:#FEF0E7">📋</div>Tableau des demandes par rôle</div>
+    <table class="circuit-table">
+      <thead>
+        <tr><th>Émetteur</th><th>Type de demande</th><th>Table(s) impactée(s)</th><th>Effet après approbation</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="role-tag rt-chef">Chef chantier</span></td>
+          <td>Demande matériaux</td>
+          <td><code class="mono">validations</code></td>
+          <td>Stock mis à jour sur le chantier</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag rt-chef">Chef chantier</span></td>
+          <td>Demande recrutement</td>
+          <td><code class="mono">validations</code></td>
+          <td>Demande transmise au RH</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag rt-daf">DAF</span></td>
+          <td>Écriture comptable</td>
+          <td><code class="mono">validations</code></td>
+          <td>Écriture validée dans le journal</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag rt-daf">DAF</span></td>
+          <td>Devis / Proforma</td>
+          <td><code class="mono">validations</code> + <code class="mono">devis</code></td>
+          <td>Devis passe en APPROUVÉ, peut être envoyé</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag rt-daf">DAF</span></td>
+          <td>Conversion Devis → Chantier</td>
+          <td><code class="mono">validations</code> + <code class="mono">chantiers</code></td>
+          <td>Nouveau chantier créé avec <code class="mono">devis_id</code></td>
+        </tr>
+        <tr>
+          <td><span class="role-tag rt-rh">RH</span></td>
+          <td>Création compte chef</td>
+          <td><code class="mono">validations</code> + <code class="mono">personnel</code></td>
+          <td>Compte activé, chef peut se connecter</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag rt-rh">RH</span></td>
+          <td>Demande congé</td>
+          <td><code class="mono">validations</code> + <code class="mono">conges</code></td>
+          <td>Congé enregistré, absent du pointage</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag rt-tech">Technicien</span></td>
+          <td>Rapport intervention</td>
+          <td><code class="mono">validations</code></td>
+          <td>Rapport archivé, visible par Admin</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag rt-ctrl">Contrôleur</span></td>
+          <td>Rapport inspection</td>
+          <td><code class="mono">validations</code></td>
+          <td>Inspection archivée, visible par Admin</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><div class="icon" style="background:#DCFCE7">✅</div>Procédure Admin — Approuver</div>
+      <ol class="steps">
+        <li>Se connecter en Admin</li>
+        <li>Section <strong>Validations</strong> → badge "X en attente"</li>
+        <li>Identifier la demande dans le tableau (Type, Émetteur, Date, Objet)</li>
+        <li>Cliquer <strong>Approuver</strong> (commentaire optionnel)</li>
+        <li>L'effet est appliqué automatiquement selon le type</li>
+        <li>La demande passe en <span class="badge badge-ok">APPROUVÉ</span> puis est archivée</li>
+      </ol>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="icon" style="background:var(--red-bg)">❌</div>Procédure Admin — Rejeter</div>
+      <ol class="steps">
+        <li>Dans le tableau Validations, trouver la demande</li>
+        <li>Cliquer <strong>Rejeter</strong></li>
+        <li>Renseigner le <strong>motif de rejet</strong> (obligatoire)</li>
+        <li>Confirmer</li>
+        <li>L'émetteur verra le motif dans son interface</li>
+        <li>La demande est archivée avec statut <span class="badge badge-crit">REJETÉ</span></li>
+      </ol>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SECTION DÉPANNAGE
+══════════════════════════════════════════════ -->
+<div id="s-depannage" class="section">
+
+  <div class="card">
+    <div class="card-title"><div class="icon" style="background:var(--red-bg)">🛠️</div>Guide de dépannage</div>
+    <div class="troubleshoot-row">
+      <div class="prob">Connexion refusée</div>
+      <div class="sol">Vérifier email + mot de passe. Si le compte n'existe pas encore, demander à l'Admin de le créer via Admin → Utilisateurs.</div>
+    </div>
+    <div class="troubleshoot-row">
+      <div class="prob">Page blanche après connexion</div>
+      <div class="sol">Attendre le chargement complet. Si ça persiste : vider le cache navigateur (Ctrl+Shift+R) et se reconnecter.</div>
+    </div>
+    <div class="troubleshoot-row">
+      <div class="prob">Erreur 401 / RLS policy</div>
+      <div class="sol">L'utilisateur n'a pas les droits pour cette action. Vérifier que son rôle dans <code class="mono">user_metadata</code> est correct.</div>
+    </div>
+    <div class="troubleshoot-row">
+      <div class="prob">Chef ne voit aucun employé</div>
+      <div class="sol">Le champ <code class="mono">chantier</code> du compte chef doit correspondre EXACTEMENT au nom dans la table <code class="mono">chantiers</code> (respect de la casse et des espaces).</div>
+    </div>
+    <div class="troubleshoot-row">
+      <div class="prob">Données non chargées</div>
+      <div class="sol">Vérifier la connexion internet. Recharger la page. Si hors-ligne, les données locales PWA sont utilisées — la sync se fait au retour en ligne.</div>
+    </div>
+    <div class="troubleshoot-row">
+      <div class="prob">Stock/budgets non sauvegardés</div>
+      <div class="sol">Dans certaines versions, budgets et stock utilisaient localStorage. Vérifier que les migrations Supabase ont bien été exécutées (table <code class="mono">materiels</code> + <code class="mono">budgets</code>).</div>
+    </div>
+    <div class="troubleshoot-row">
+      <div class="prob">Pointage enregistré mais absent du calcul paie</div>
+      <div class="sol">Vérifier que les pointages sont dans <code class="mono">pointage_attendance</code> et non dans l'ancienne table <code class="mono">pointage</code>. Migration I1 requise.</div>
+    </div>
+    <div class="troubleshoot-row">
+      <div class="prob">suivi-chantier.html accessible sans connexion</div>
+      <div class="sol">Anomalie connue (C4) — la guard <code class="mono">checkAuthOrRedirect()</code> doit être ajoutée en haut du fichier. Signaler à l'admin technique.</div>
+    </div>
+    <div class="troubleshoot-row">
+      <div class="prob">Réinitialiser toutes les données</div>
+      <div class="sol">Exécuter dans Supabase SQL Editor :<br><code class="mono">TRUNCATE personnel, pointage_attendance, journal, salaires, rapports_chantier, controles_inopines, gantt_taches, stocks_chantier, commandes, validations, caisse RESTART IDENTITY CASCADE;</code> puis réexécuter <code class="mono">SEED_DATA.sql</code></div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><div class="icon" style="background:#EEF2FF">📱</div>Installation PWA</div>
+      <ol class="steps">
+        <li>Ouvrir l'application dans Chrome / Edge (mobile ou desktop)</li>
+        <li>Icône d'installation dans la barre d'adresse (ou menu → Installer)</li>
+        <li>Confirmer l'installation</li>
+        <li>L'app apparaît comme une application native</li>
+        <li>Hors-ligne : les fonctionnalités de base fonctionnent (saisies locales)</li>
+        <li>À la reconnexion : synchronisation automatique</li>
+      </ol>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="icon" style="background:#FEF0E7">🔐</div>Changer son mot de passe</div>
+      <ol class="steps">
+        <li>Se connecter avec l'ancien mot de passe</li>
+        <li>Cliquer <strong>Changer le mot de passe</strong> (haut-droite)</li>
+        <li>Saisir le nouveau mot de passe</li>
+        <li>Confirmer</li>
+        <li>Se déconnecter et se reconnecter avec le nouveau mot de passe</li>
+      </ol>
+    </div>
+  </div>
+
+</div>
+
+</div><!-- end container -->
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('visible'));
+  document.getElementById('s-' + id).classList.add('visible');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showRole(r) {
+  document.querySelectorAll('.role-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('role-' + r).classList.add('active');
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+function goToRole(r) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('visible'));
+  document.getElementById('s-roles').classList.add('visible');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.nav-btn:nth-child(3)').classList.add('active');
+  showRoleDirect(r);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showRoleDirect(r) {
+  document.querySelectorAll('.role-section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('role-' + r);
+  if (el) el.classList.add('active');
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  const tabMap = { admin:0, daf:1, rh:2, chef:3, controleur:4, tech:5 };
+  const tabs = document.querySelectorAll('.tab');
+  if (tabs[tabMap[r]]) tabs[tabMap[r]].classList.add('active');
+}
+
+function toggleScenario(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const isOpen = el.classList.contains('open');
+  document.querySelectorAll('.expanded-scenario').forEach(e => e.classList.remove('open'));
+  if (!isOpen) {
+    el.classList.add('open');
+    setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+  }
+}
+
+function copyEmail(email) {
+  navigator.clipboard.writeText(email).then(() => {
+    const toast = document.createElement('div');
+    toast.textContent = '✅ ' + email + ' copié !';
+    toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1A2340;color:white;padding:10px 20px;border-radius:8px;font-size:0.85rem;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,0.3)';
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2000);
+  });
+}
+</script>
+
+</body>
+</html>
