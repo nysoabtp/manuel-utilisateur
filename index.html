@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NySoa BTP — Guide de prise en main</title>
+<title>NySoa BTP — Manuel Utilisateur v23</title>
 <style>
   :root {
     --orange: #E8660A;
@@ -297,7 +297,7 @@
     <div class="header-logo">N</div>
     <div>
       <div class="header-title">NySoa BTP</div>
-      <div class="header-sub">Guide de prise en main — ERP Chantier</div>
+      <div class="header-sub">Manuel Utilisateur v23 — Juin 2026</div>
     </div>
     <nav class="header-nav">
       <button class="nav-btn active" onclick="showSection('accueil')">Accueil</button>
@@ -489,9 +489,10 @@
             <li><span class="check-icon">👥</span><strong>Utilisateurs</strong> — créer / gérer comptes</li>
             <li><span class="check-icon">📋</span><strong>Rapports chantier</strong> — vue globale</li>
             <li><span class="check-icon">🔍</span><strong>Contrôles</strong> — inspections inopinées</li>
-            <li><span class="check-icon">✅</span><strong>Validations</strong> — approuver/rejeter les demandes</li>
+            <li><span class="check-icon">✅</span><strong>Validations</strong> — approuver/rejeter les demandes <span class="badge badge-new">PRIORITÉ</span></li>
             <li><span class="check-icon">📊</span><strong>Gantt</strong> — avancement global</li>
             <li><span class="check-icon">📡</span><strong>Supabase</strong> — état de la connexion</li>
+            <li><span class="check-icon">💹</span><strong>KPI Bénéfice net</strong> — Recettes − Dépenses, vert/rouge</li>
           </ul>
         </div>
         <div>
@@ -504,8 +505,8 @@
             <li>Cliquer <strong>Créer l'utilisateur</strong></li>
           </ol>
           <div class="tip" style="margin-top:12px">
-            <strong>KPI Bénéfice net</strong>
-            Affiché en vert (positif) ou rouge (négatif) sur le dashboard. Calculé dynamiquement : Recettes − Dépenses.
+            <strong>⚡ Priorité session</strong>
+            Vérifier le badge Validations en début de session — toutes les demandes des autres rôles nécessitent une action Admin avant d'être effectives.
           </div>
         </div>
       </div>
@@ -565,11 +566,11 @@
           <strong style="font-size:0.85rem">Modules :</strong>
           <ul class="checklist" style="margin-top:10px">
             <li><span class="check-icon">👤</span><strong>Employés</strong> — 82 actifs, filtres département/chantier</li>
-            <li><span class="check-icon">🎯</span><strong>Recrutement</strong> — demandes + suivi</li>
-            <li><span class="check-icon">🏖️</span><strong>Congés</strong> — demandes, dates, motifs</li>
+            <li><span class="check-icon">🎯</span><strong>Recrutement</strong> — demandes + suivi (soumis à validation Admin)</li>
+            <li><span class="check-icon">🏖️</span><strong>Congés</strong> — demandes, dates, motifs (soumis à validation Admin)</li>
             <li><span class="check-icon">📚</span><strong>Formations</strong> — plan + suivi</li>
             <li><span class="check-icon">💳</span><strong>Paie</strong> — génération fiches, export PDF, réajustement</li>
-            <li><span class="check-icon">🔑</span><strong>Comptes chefs</strong> — création avec chantier_id obligatoire</li>
+            <li><span class="check-icon">🔑</span><strong>Comptes chefs</strong> — création avec chantier_id obligatoire (soumis à validation Admin)</li>
           </ul>
         </div>
         <div>
@@ -604,11 +605,11 @@
         <div>
           <strong style="font-size:0.85rem">Modules :</strong>
           <ul class="checklist" style="margin-top:10px">
-            <li><span class="check-icon">🏢</span><strong>Mes Chantiers</strong> — statut, budget, avancement</li>
+            <li><span class="check-icon">🏢</span><strong>Mes Chantiers</strong> — statut, budget, avancement (lecture seule)</li>
             <li><span class="check-icon">👷</span><strong>Mon Équipe</strong> — ouvriers affectés</li>
-            <li><span class="check-icon">✍️</span><strong>Pointage</strong> — manuel ou QR code</li>
+            <li><span class="check-icon">✍️</span><strong>Pointage</strong> — manuel ou QR code (enregistré dans <code class="mono">pointage_attendance</code>)</li>
             <li><span class="check-icon">📅</span><strong>Planning</strong> — tâches, priorités</li>
-            <li><span class="check-icon">🧱</span><strong>Matériaux</strong> — stocks + demandes</li>
+            <li><span class="check-icon">🧱</span><strong>Matériaux</strong> — stocks Supabase + demandes (→ validation Admin)</li>
             <li><span class="check-icon">📋</span><strong>Rapports</strong> — rapports journaliers</li>
           </ul>
         </div>
@@ -1090,19 +1091,23 @@
     </div>
     <div class="troubleshoot-row">
       <div class="prob">Stock/budgets non sauvegardés</div>
-      <div class="sol">Dans certaines versions, budgets et stock utilisaient localStorage. Vérifier que les migrations Supabase ont bien été exécutées (table <code class="mono">materiels</code> + <code class="mono">budgets</code>).</div>
+      <div class="sol">Depuis v23, stocks et budgets sont en base Supabase (tables <code class="mono">materiels</code> + <code class="mono">budgets</code>). Vérifier que les migrations SQL ont bien été exécutées. Le localStorage n'est plus utilisé que comme cache hors-ligne temporaire.</div>
     </div>
     <div class="troubleshoot-row">
       <div class="prob">Pointage enregistré mais absent du calcul paie</div>
       <div class="sol">Vérifier que les pointages sont dans <code class="mono">pointage_attendance</code> et non dans l'ancienne table <code class="mono">pointage</code>. Migration I1 requise.</div>
     </div>
     <div class="troubleshoot-row">
-      <div class="prob">suivi-chantier.html accessible sans connexion</div>
-      <div class="sol">Anomalie connue (C4) — la guard <code class="mono">checkAuthOrRedirect()</code> doit être ajoutée en haut du fichier. Signaler à l'admin technique.</div>
+      <div class="prob">Demande bloquée en EN_ATTENTE</div>
+      <div class="sol">L'Administrateur doit valider la demande dans Admin → Validations. Vérifier que le badge de demandes en attente est bien visible dans la navigation Admin.</div>
+    </div>
+    <div class="troubleshoot-row">
+      <div class="prob">Devis non convertible en chantier</div>
+      <div class="sol">Le devis doit être au statut <strong>ACCEPTÉ</strong> pour activer le bouton de conversion. Vérifier que la réponse client a bien été enregistrée (Accepter).</div>
     </div>
     <div class="troubleshoot-row">
       <div class="prob">Réinitialiser toutes les données</div>
-      <div class="sol">Exécuter dans Supabase SQL Editor :<br><code class="mono">TRUNCATE personnel, pointage_attendance, journal, salaires, rapports_chantier, controles_inopines, gantt_taches, stocks_chantier, commandes, validations, caisse RESTART IDENTITY CASCADE;</code> puis réexécuter <code class="mono">SEED_DATA.sql</code></div>
+      <div class="sol">Exécuter dans Supabase SQL Editor :<br><code class="mono">TRUNCATE personnel, pointage_attendance, journal, salaires, rapports_chantier, controles_inopines, gantt_taches, stocks_chantier, commandes, validations, caisse, devis, conges RESTART IDENTITY CASCADE;</code> puis réexécuter <code class="mono">SEED_DATA.sql</code></div>
     </div>
   </div>
 
@@ -1192,7 +1197,7 @@ function copyEmail(email) {
 </script>
 
 <footer style="text-align:center;padding:32px 16px 24px;color:#94a3b8;font-size:0.82rem;border-top:1px solid #e2e8f0;margin-top:48px;">
-  Conception et création de <strong style="color:#1A2340">Mandimbimanana</strong> — Juin 2026
+  Conception et création de <strong style="color:#1A2340">Mandimbimanana</strong> — Manuel Utilisateur v23 — Juin 2026
 </footer>
 
 </body>
